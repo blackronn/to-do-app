@@ -11,5 +11,6 @@ import java.time.LocalDateTime;
 public class TaskCreateRequestDto {
     private String title;
     private String description;
-    private LocalDateTime dueDate;
+    private Long userId;
+
 }

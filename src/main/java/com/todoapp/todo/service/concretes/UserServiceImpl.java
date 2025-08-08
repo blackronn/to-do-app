@@ -1,4 +1,4 @@
-package com.todoapp.todo.service.impl;
+package com.todoapp.todo.service.concretes;
 
 import com.todoapp.todo.model.User;
 import com.todoapp.todo.repository.UserRepository;
@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements IUserService {

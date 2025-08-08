@@ -1,22 +1,16 @@
 package com.todoapp.todo.dto;
 
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-@Getter
-@Setter
+@Data
 public class TaskResponseDto {
     private Long id;
     private String description;
     private String title;
     private String status;
-    private LocalDateTime dueDate;
-    private UUID userId;
-    private LocalDateTime createdDate;
+    private Long userId;
+
 
 }
 

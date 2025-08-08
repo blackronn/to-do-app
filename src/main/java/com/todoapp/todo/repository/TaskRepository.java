@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface TaskRepository extends JpaRepository<Task, Long> {
     // extends etmem sayesiinde findAll findById gibi methodlar otomatikleşti
 
-    List<Task> findByUserId(UUID userId);
+    List<Task> findAllByUserId(Long userId);
 
 
 

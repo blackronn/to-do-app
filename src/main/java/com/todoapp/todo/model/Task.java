@@ -1,13 +1,19 @@
 package com.todoapp.todo.model;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -27,25 +33,10 @@ public class Task {
     @Column(nullable = false)
     private String status = "TO_DO";
 
-    private LocalDateTime dueDate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
 
-    @Column(name = "user_id", nullable= false)
-    private UUID userId;
-
-    @Column(name= "created_at", nullable=false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name= " updated_at")
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    @JsonIgnore
+    private User user;
 
 }

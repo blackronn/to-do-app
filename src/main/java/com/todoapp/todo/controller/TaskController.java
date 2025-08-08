@@ -1,39 +1,50 @@
 package com.todoapp.todo.controller;
 
+import com.todoapp.todo.dto.TaskCreateRequestDto;
 import com.todoapp.todo.dto.TaskResponseDto;
-import com.todoapp.todo.service.TaskService;
-import jakarta.persistence.Entity;
+import com.todoapp.todo.service.abstracts.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
-import java.util.UUID;
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/tasks")
-@CrossOrigin(origins = "http://localhost:3000") //vue.js için
+@CrossOrigin(origins = "*")
 public class TaskController {
+
     @Autowired
-    private TaskService TaskService;
+    private ITaskService taskService;
 
-    //jwtden uid çıkarıcak buraya
-    private UUID getUserIdFromJwt(Jwt jwt) {
-        return UUID.fromString(jwt.getSubject());
+
+    @PostMapping
+    public ResponseEntity<TaskResponseDto> createTask(@RequestBody TaskCreateRequestDto requestDto) {
+        TaskResponseDto createdTask = taskService.createTask(requestDto);
+        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<List<TaskResponseDto>> getAllTasks(@AuthenticationPrincipal Jwt principal
-    ) {
-       UUID userId = getUserIdFromJwt(principal);
-       List<TaskResponseDto> tasks = taskService.getTasksForUser(userId);
-       return ResponseEntity.ok(tasks);
-
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<TaskResponseDto>>  getTasksByUserId(@PathVariable Long userId) {
+        List<TaskResponseDto> tasks = taskService.getTasksByUserId(userId);
+        return ResponseEntity.ok(tasks);
     }
 
+    @DeleteMapping("/{taskId}")
+    public ResponseEntity<TaskResponseDto> deleteTask(@PathVariable Long taskId){
+        taskService.deleteTask(taskId);
+        return ResponseEntity.noContent().build();
+    }
 
+    @PutMapping("/{taskId}/status")
+    public ResponseEntity<TaskResponseDto> updateTaskStatus(@PathVariable Long taskId, @RequestBody Map<String, String> statusMap) {
+        String newStatus = statusMap.get("status");
+        TaskResponseDto updatedTask = taskService.updateTaskStatus(taskId, newStatus);
+        return ResponseEntity.ok(updatedTask);
+    }
 
 
 }
