@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -19,9 +20,14 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User login(String username, String password) {
-        return userRepository.findByUsername(username)
-                .filter(user -> user.getPassword().equals(password))
-                .orElse(null);
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (user.getPassword().equals(password)) {
+                return user;
+            }
+        }
+        throw new IllegalArgumentException("Kullanıcı adı veya şifre hatalı.");
     }
 
     @Override
